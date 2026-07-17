@@ -1133,13 +1133,20 @@ if page == "📊 Overall Metric":
     # Build seller/client options from the date-filtered data
     _dw_all_sellers = sorted(date_filtered_df["seller_type"].unique())
     _dw_seller_client = {s: _resolve_client(s) for s in _dw_all_sellers}
-    _dw_options = [
+    _dw_all_options = [
         f"{s}  ({_dw_seller_client[s]})" if _dw_seller_client[s] != "—" else s
         for s in _dw_all_sellers
     ]
-    _dw_opt_to_seller = dict(zip(_dw_options, _dw_all_sellers))
+    _dw_opt_to_seller = dict(zip(_dw_all_options, _dw_all_sellers))
 
-    _dw_fc1, _dw_fc2, _dw_fc3 = st.columns([2, 2, 1.2])
+    # Client → sellers mapping (skip sellers with no resolved client)
+    _dw_client_to_sellers: dict[str, list[str]] = {}
+    for _s, _c in _dw_seller_client.items():
+        if _c and _c != "—":
+            _dw_client_to_sellers.setdefault(_c, []).append(_s)
+    _dw_client_options = sorted(_dw_client_to_sellers)
+
+    _dw_fc1, _dw_fc2, _dw_fc3, _dw_fc4 = st.columns([2, 1.6, 2, 1.2])
     with _dw_fc1:
         try:
             _dw_all_dates = sorted(date_filtered_df["reporting_date"].unique())
@@ -1155,14 +1162,30 @@ if page == "📊 Overall Metric":
         if _dw_start > _dw_end:
             _dw_start, _dw_end = _dw_end, _dw_start
     with _dw_fc2:
+        _dw_selected_clients = st.multiselect(
+            "Select clients",
+            options=_dw_client_options,
+            default=[],
+            key="dw_client_select",
+            placeholder="All clients",
+        )
+    with _dw_fc3:
+        # Narrow seller options to the selected clients (if any)
+        if _dw_selected_clients:
+            _dw_allowed = {s for c in _dw_selected_clients for s in _dw_client_to_sellers[c]}
+        else:
+            _dw_allowed = set(_dw_all_sellers)
+        _dw_options = [o for o in _dw_all_options if _dw_opt_to_seller[o] in _dw_allowed]
         _dw_selected_opts = st.multiselect(
             "Select sellers",
             options=_dw_options,
             default=[],
             key="dw_seller_select",
-            placeholder="Choose one or more sellers…",
+            placeholder="All sellers in selected clients"
+            if _dw_selected_clients
+            else "Choose one or more sellers…",
         )
-    with _dw_fc3:
+    with _dw_fc4:
         _dw_granularity = st.radio(
             "View by",
             ["Daily", "Weekly", "Monthly"],
@@ -1170,10 +1193,14 @@ if page == "📊 Overall Metric":
             key="dw_granularity",
         )
 
+    # Explicit seller picks take precedence; otherwise fall back to all sellers
+    # of the selected clients.
     _dw_selected_sellers = [_dw_opt_to_seller[o] for o in _dw_selected_opts]
+    if not _dw_selected_sellers and _dw_selected_clients:
+        _dw_selected_sellers = sorted(_dw_allowed)
 
     if not _dw_selected_sellers:
-        st.info("Select at least one seller above to load the report.")
+        st.info("Select at least one client or seller above to load the report.")
     else:
         _dw_start_str = _dw_start.strftime("%Y%m%d")
         _dw_end_str = _dw_end.strftime("%Y%m%d")
