@@ -993,7 +993,7 @@ def _get_thresh(metric: str) -> float:
 st.markdown(
     '<div style="display:flex;gap:24px;margin-bottom:12px;">'
     '<a href="https://rto-zrto-dashboard123.streamlit.app/" target="_blank" style="color:#1D4ED8;font-weight:500;text-decoration:none;">🔗 RTO Dashboard</a>'
-    '<a href="https://citydashtemp-2tp3qsdn4utx3q6vrb3nzc.streamlit.app/" target="_blank" style="color:#1D4ED8;font-weight:500;text-decoration:none;">🔗 state wise</a>'
+    '<a href="https://citydashtemp-2tp3qsdn4utx3q6vrb3nzc.streamlit.app/" target="_blank" style="color:#1D4ED8;font-weight:500;text-decoration:none;">🔗 city wise</a>'
     '</div>',
     unsafe_allow_html=True,
 )
