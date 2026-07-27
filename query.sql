@@ -26,9 +26,7 @@ WITH conv AS (
         bigfoot_external_neo.scp_oms__date_dim_fact dim
         ON ext.shipment_received_at_origin_date_key = dim.date_dim_key
     WHERE
-        seller_type IN (
-           'ABE', 'ABF', 'AGI', 'AIL', 'AVH', 'BBW', 'BFK', 'BGS', 'BHN', 'BRP', 'BSI', 'CDM', 'CIQ', 'CLQ', 'CLS', 'CMA', 'CMD', 'CQN', 'CRD', 'CSU', 'CUL', 'CUL_NDD', 'DAH', 'DAM', 'DLA', 'DSL', 'DSP', 'ECS', 'EMC', 'EMS', 'FBD', 'FCY', 'FDD', 'FHH', 'FKA', 'FKM', 'FKZ', 'FLN', 'FLS', 'FMB', 'FRD', 'G', 'GBS', 'GKA', 'GKM', 'GKP', 'GKS', 'GLA', 'GOK', 'GSB', 'GSD', 'GSL', 'HKH', 'HOP', 'HSW', 'ILM', 'ILQ', 'ILS', 'IOB', 'JHB', 'JIF', 'JSL', 'KAL', 'KAP', 'KND_NDD', 'KTH', 'LFS', 'LHL', 'LIV', 'LMR', 'LRL', 'MAM', 'MAX', 'MJH', 'MNM', 'MOG', 'MWP', 'MYL', 'MYR', 'NAP', 'NBC', 'NIR', 'NKF', 'NMA', 'NMB', 'NME', 'NMP', 'NMS', 'NUA', 'NYK', 'OIP', 'PFP', 'PFY', 'PGR', 'PIP', 'PLN', 'POP', 'POW', 'PRO', 'PRV', 'PSP', 'RAM', 'RAP', 'RDD', 'RDT', 'REN', 'REW', 'ROM', 'ROP', 'RPB', 'RPG', 'RPS', 'SCL', 'SCR', 'SDB', 'SDI', 'SDL', 'SHC', 'SHO', 'SIS', 'SLS', 'SME', 'SMP', 'SNI', 'SPB', 'SPY', 'SRS', 'SRT', 'SSI', 'TDS', 'TEE', 'TMG', 'TTN', 'VEB', 'VEH', 'VEL', 'VEN', 'VET', 'WML', 'ZIP','ZBI'
-        )
+        seller_type NOT IN ('Non-FA','FA','WSR','MYN','MYS','FKW','FKH','MYE','MP_FBF_SELLER','MP_NON_FBF_SELLER','SF2','SF4','SF6','SF7','FMP','FKMP')
     GROUP BY
         1, 2, 3
 ),
@@ -56,9 +54,7 @@ pickup AS (
         bigfoot_external_neo.scp_oms__date_dim_fact dim
         ON ext.shipment_received_at_origin_date_key = dim.date_dim_key
     WHERE
-        seller_type IN (
-          'ABE', 'ABF', 'AGI', 'AIL', 'AVH', 'BBW', 'BFK', 'BGS', 'BHN', 'BRP', 'BSI', 'CDM', 'CIQ', 'CLQ', 'CLS', 'CMA', 'CMD', 'CQN', 'CRD', 'CSU', 'CUL', 'CUL_NDD', 'DAH', 'DAM', 'DLA', 'DSL', 'DSP', 'ECS', 'EMC', 'EMS', 'FBD', 'FCY', 'FDD', 'FHH', 'FKA', 'FKM', 'FKZ', 'FLN', 'FLS', 'FMB', 'FRD', 'G', 'GBS', 'GKA', 'GKM', 'GKP', 'GKS', 'GLA', 'GOK', 'GSB', 'GSD', 'GSL', 'HKH', 'HOP', 'HSW', 'ILM', 'ILQ', 'ILS', 'IOB', 'JHB', 'JIF', 'JSL', 'KAL', 'KAP', 'KND_NDD', 'KTH', 'LFS', 'LHL', 'LIV', 'LMR', 'LRL', 'MAM', 'MAX', 'MJH', 'MNM', 'MOG', 'MWP', 'MYL', 'MYR', 'NAP', 'NBC', 'NIR', 'NKF', 'NMA', 'NMB', 'NME', 'NMP', 'NMS', 'NUA', 'NYK', 'OIP', 'PFP', 'PFY', 'PGR', 'PIP', 'PLN', 'POP', 'POW', 'PRO', 'PRV', 'PSP', 'RAM', 'RAP', 'RDD', 'RDT', 'REN', 'REW', 'ROM', 'ROP', 'RPB', 'RPG', 'RPS', 'SCL', 'SCR', 'SDB', 'SDI', 'SDL', 'SHC', 'SHO', 'SIS', 'SLS', 'SME', 'SMP', 'SNI', 'SPB', 'SPY', 'SRS', 'SRT', 'SSI', 'TDS', 'TEE', 'TMG', 'TTN', 'VEB', 'VEH', 'VEL', 'VEN', 'VET', 'WML', 'ZIP','ZBI'
-        )
+        seller_type NOT IN ('Non-FA','FA','WSR','MYN','MYS','FKW','FKH','MYE','MP_FBF_SELLER','MP_NON_FBF_SELLER','SF2','SF4','SF6','SF7','FMP','FKMP')
         AND LOWER(ekl_shipment_type) NOT IN ('rvp')
     GROUP BY
         1, 2, 3
@@ -115,9 +111,7 @@ fac AS (
         bigfoot_external_neo.scp_oms__date_dim_fact dim
         ON task.tasklist_created_date_key = dim.date_dim_key
     WHERE
-        seller_type IN (
-           'ABE', 'ABF', 'AGI', 'AIL', 'AVH', 'BBW', 'BFK', 'BGS', 'BHN', 'BRP', 'BSI', 'CDM', 'CIQ', 'CLQ', 'CLS', 'CMA', 'CMD', 'CQN', 'CRD', 'CSU', 'CUL', 'CUL_NDD', 'DAH', 'DAM', 'DLA', 'DSL', 'DSP', 'ECS', 'EMC', 'EMS', 'FBD', 'FCY', 'FDD', 'FHH', 'FKA', 'FKM', 'FKZ', 'FLN', 'FLS', 'FMB', 'FRD', 'G', 'GBS', 'GKA', 'GKM', 'GKP', 'GKS', 'GLA', 'GOK', 'GSB', 'GSD', 'GSL', 'HKH', 'HOP', 'HSW', 'ILM', 'ILQ', 'ILS', 'IOB', 'JHB', 'JIF', 'JSL', 'KAL', 'KAP', 'KND_NDD', 'KTH', 'LFS', 'LHL', 'LIV', 'LMR', 'LRL', 'MAM', 'MAX', 'MJH', 'MNM', 'MOG', 'MWP', 'MYL', 'MYR', 'NAP', 'NBC', 'NIR', 'NKF', 'NMA', 'NMB', 'NME', 'NMP', 'NMS', 'NUA', 'NYK', 'OIP', 'PFP', 'PFY', 'PGR', 'PIP', 'PLN', 'POP', 'POW', 'PRO', 'PRV', 'PSP', 'RAM', 'RAP', 'RDD', 'RDT', 'REN', 'REW', 'ROM', 'ROP', 'RPB', 'RPG', 'RPS', 'SCL', 'SCR', 'SDB', 'SDI', 'SDL', 'SHC', 'SHO', 'SIS', 'SLS', 'SME', 'SMP', 'SNI', 'SPB', 'SPY', 'SRS', 'SRT', 'SSI', 'TDS', 'TEE', 'TMG', 'TTN', 'VEB', 'VEH', 'VEL', 'VEN', 'VET', 'WML', 'ZIP','ZBI'
-        )
+        seller_type NOT IN ('Non-FA','FA','WSR','MYN','MYS','FKW','FKH','MYE','MP_FBF_SELLER','MP_NON_FBF_SELLER','SF2','SF4','SF6','SF7','FMP','FKMP')
         AND LOWER(facility_type) NOT IN ('large')
     GROUP BY
         1, 2, 3
@@ -143,9 +137,7 @@ ofd AS (
         bigfoot_external_neo.scp_oms__date_dim_fact dim
         ON ext.fsd_first_dh_received_date_key = dim.date_dim_key
     WHERE
-        seller_type IN (
-           'ABE', 'ABF', 'AGI', 'AIL', 'AVH', 'BBW', 'BFK', 'BGS', 'BHN', 'BRP', 'BSI', 'CDM', 'CIQ', 'CLQ', 'CLS', 'CMA', 'CMD', 'CQN', 'CRD', 'CSU', 'CUL', 'CUL_NDD', 'DAH', 'DAM', 'DLA', 'DSL', 'DSP', 'ECS', 'EMC', 'EMS', 'FBD', 'FCY', 'FDD', 'FHH', 'FKA', 'FKM', 'FKZ', 'FLN', 'FLS', 'FMB', 'FRD', 'G', 'GBS', 'GKA', 'GKM', 'GKP', 'GKS', 'GLA', 'GOK', 'GSB', 'GSD', 'GSL', 'HKH', 'HOP', 'HSW', 'ILM', 'ILQ', 'ILS', 'IOB', 'JHB', 'JIF', 'JSL', 'KAL', 'KAP', 'KND_NDD', 'KTH', 'LFS', 'LHL', 'LIV', 'LMR', 'LRL', 'MAM', 'MAX', 'MJH', 'MNM', 'MOG', 'MWP', 'MYL', 'MYR', 'NAP', 'NBC', 'NIR', 'NKF', 'NMA', 'NMB', 'NME', 'NMP', 'NMS', 'NUA', 'NYK', 'OIP', 'PFP', 'PFY', 'PGR', 'PIP', 'PLN', 'POP', 'POW', 'PRO', 'PRV', 'PSP', 'RAM', 'RAP', 'RDD', 'RDT', 'REN', 'REW', 'ROM', 'ROP', 'RPB', 'RPG', 'RPS', 'SCL', 'SCR', 'SDB', 'SDI', 'SDL', 'SHC', 'SHO', 'SIS', 'SLS', 'SME', 'SMP', 'SNI', 'SPB', 'SPY', 'SRS', 'SRT', 'SSI', 'TDS', 'TEE', 'TMG', 'TTN', 'VEB', 'VEH', 'VEL', 'VEN', 'VET', 'WML', 'ZIP','ZBI'
-        )
+        seller_type NOT IN ('Non-FA','FA','WSR','MYN','MYS','FKW','FKH','MYE','MP_FBF_SELLER','MP_NON_FBF_SELLER','SF2','SF4','SF6','SF7','FMP','FKMP')
     GROUP BY
         1, 2, 3
 ),
@@ -182,9 +174,7 @@ breach AS (
         bigfoot_external_neo.scp_oms__date_dim_fact dim
         ON CAST(FORMAT_DATE('%Y%m%d', DATE(ext.shipped_lpd)) AS INT64) = dim.date_dim_key
     WHERE
-        seller_type IN (
-            'ABE', 'ABF', 'AGI', 'AIL', 'AVH', 'BBW', 'BFK', 'BGS', 'BHN', 'BRP', 'BSI', 'CDM', 'CIQ', 'CLQ', 'CLS', 'CMA', 'CMD', 'CQN', 'CRD', 'CSU', 'CUL', 'CUL_NDD', 'DAH', 'DAM', 'DLA', 'DSL', 'DSP', 'ECS', 'EMC', 'EMS', 'FBD', 'FCY', 'FDD', 'FHH', 'FKA', 'FKM', 'FKZ', 'FLN', 'FLS', 'FMB', 'FRD', 'G', 'GBS', 'GKA', 'GKM', 'GKP', 'GKS', 'GLA', 'GOK', 'GSB', 'GSD', 'GSL', 'HKH', 'HOP', 'HSW', 'ILM', 'ILQ', 'ILS', 'IOB', 'JHB', 'JIF', 'JSL', 'KAL', 'KAP', 'KND_NDD', 'KTH', 'LFS', 'LHL', 'LIV', 'LMR', 'LRL', 'MAM', 'MAX', 'MJH', 'MNM', 'MOG', 'MWP', 'MYL', 'MYR', 'NAP', 'NBC', 'NIR', 'NKF', 'NMA', 'NMB', 'NME', 'NMP', 'NMS', 'NUA', 'NYK', 'OIP', 'PFP', 'PFY', 'PGR', 'PIP', 'PLN', 'POP', 'POW', 'PRO', 'PRV', 'PSP', 'RAM', 'RAP', 'RDD', 'RDT', 'REN', 'REW', 'ROM', 'ROP', 'RPB', 'RPG', 'RPS', 'SCL', 'SCR', 'SDB', 'SDI', 'SDL', 'SHC', 'SHO', 'SIS', 'SLS', 'SME', 'SMP', 'SNI', 'SPB', 'SPY', 'SRS', 'SRT', 'SSI', 'TDS', 'TEE', 'TMG', 'TTN', 'VEB', 'VEH', 'VEL', 'VEN', 'VET', 'WML', 'ZIP','ZBI'
-        )
+        seller_type NOT IN ('Non-FA','FA','WSR','MYN','MYS','FKW','FKH','MYE','MP_FBF_SELLER','MP_NON_FBF_SELLER','SF2','SF4','SF6','SF7','FMP','FKMP')
     GROUP BY
         1, 2, 3
 )
