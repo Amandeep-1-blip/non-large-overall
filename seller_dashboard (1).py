@@ -46,6 +46,7 @@ st.set_page_config(
 ROOT_DIR = Path(__file__).resolve().parent
 CLIENT_LIST_CSV = ROOT_DIR / "client list.csv"
 ADMIN_EMAILS_JSON = ROOT_DIR / "admin_emails.json"
+BUCKETS_JSON = ROOT_DIR / "buckets.json"
 _METRICS_CSV_NAME = "cd5a0d281d2bef0117eaeb0bffae3932.csv"
 
 
@@ -531,6 +532,19 @@ def load_client_map(path: str) -> dict:
 CLIENT_MAP = load_client_map("client list.csv")
 
 
+@st.cache_data(ttl=300)
+def load_buckets(path: str) -> dict[str, list[str]]:
+    """Load bucket definitions from buckets.json: {bucket_name: [seller_type, ...]}"""
+    p = Path(path)
+    if not p.is_file():
+        return {}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return {k: [str(v).strip().upper() for v in vs] for k, vs in data.items() if isinstance(vs, list)}
+    except Exception:
+        return {}
+
+
 
 def _resolve_client(seller_str):
     """Resolve client name from a seller_type value that may contain merged codes like 'OIP/GLA/FMB'."""
@@ -951,8 +965,16 @@ if st.session_state.auth_role == "viewer":
 
 seller_list = sorted(raw_df["seller_type"].unique())
 
+BUCKETS = load_buckets(str(BUCKETS_JSON))
+_active_bucket = st.session_state.get("active_bucket", "All")
+if BUCKETS and _active_bucket != "All" and _active_bucket in BUCKETS:
+    _bucket_sellers = set(BUCKETS[_active_bucket])
+    _bucket_seller_list = [s for s in seller_list if s.upper() in _bucket_sellers]
+else:
+    _bucket_seller_list = seller_list
+
 with st.sidebar:
-    selected_sellers = st.multiselect("Seller Types", options=seller_list, default=seller_list)
+    selected_sellers = st.multiselect("Seller Types", options=_bucket_seller_list, default=_bucket_seller_list)
     payment_filter   = st.radio("Payment Type", ["All", "COD", "Prepaid"], index=0)
     min_vol          = st.slider(
         "Min Volume (PHin)", 0,
@@ -986,6 +1008,20 @@ def _get_thresh(metric: str) -> float:
     """Return the current user-chosen threshold for *metric* from session state."""
     return st.session_state.get(f"tp_thresh_{metric}", METRIC_CONFIG[metric]["thresh"])
 
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BUCKET SELECTOR
+# ─────────────────────────────────────────────────────────────────────────────
+if BUCKETS and IS_ADMIN:
+    _bucket_opts = ["All"] + list(BUCKETS.keys())
+    st.radio(
+        "Bucket",
+        options=_bucket_opts,
+        horizontal=True,
+        key="active_bucket",
+        label_visibility="collapsed",
+    )
+    st.divider()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # QUICK LINKS
